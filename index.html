@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Hello World! </h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html><!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>पकड़ो गेंद!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #d32f2f;
+        }
+        
+        #game-area {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 30px auto;
+            border: 2px solid #1976d2;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #bbdefb;
+        }
+        
+        #ball {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #f44336;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+        
+        #ball:hover {
+            transform: scale(1.1);
+        }
+        
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        #timer {
+            font-size: 24px;
+            color: #ff8f00;
+            font-weight: bold;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>पकड़ो गेंद! (Ball Catch Game)</h1>
+    <p>जितनी जल्दी हो सके गेंद को पकड़ो!</p>
+    
+    <div id="timer">समय: 30 सेकंड</div>
+    <div id="score">स्कोर: 0</div>
+    <button id="start-btn">खेल शुरू करें</button>
+    
+    <div id="game-area">
+        <div id="ball"></div>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        const gameArea = document.getElementById('game-area');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const startBtn = document.getElementById('start-btn');
+        
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let timerInterval;
+        let gameActive = false;
+        
+        // गेंद की रैंडम पोजीशन
+        function moveBall() {
+            const areaWidth = gameArea.clientWidth - ball.clientWidth;
+            const areaHeight = gameArea.clientHeight - ball.clientHeight;
+            
+            const randomX = Math.floor(Math.random() * areaWidth);
+            const randomY = Math.floor(Math.random() * areaHeight);
+            
+            ball.style.left = `${randomX}px`;
+            ball.style.top = `${randomY}px`;
+        }
+        
+        // गेंद पकड़ने पर
+        ball.addEventListener('click', function() {
+            if(gameActive) {
+                score++;
+                scoreElement.textContent = `स्कोर: ${score}`;
+                moveBall();
+            }
+        });
+        
+        // टाइमर अपडेट
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = `समय: ${timeLeft} सेकंड`;
+            
+            if(timeLeft <= 0) {
+                endGame();
+            }
+        }
+        
+        // गेम शुरू
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            gameActive = true;
+            
+            scoreElement.textContent = `स्कोर: ${score}`;
+            timerElement.textContent = `समय: ${timeLeft} सेकंड`;
+            
+            moveBall();
+            
+            // गेंद को हर 1.5 सेकंड में मूव करें
+            gameInterval = setInterval(moveBall, 1500);
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            startBtn.disabled = true;
+        }
+        
+        // गेम खत्म
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            
+            alert(`खेल समाप्त! आपका स्कोर: ${score}`);
+            startBtn.disabled = false;
+        }
+        
+        // स्टार्ट बटन
+        startBtn.addEventListener('click', startGame);
+    </script>
+</body>
+</html>
